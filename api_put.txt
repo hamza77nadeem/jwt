@@ -1,0 +1,59 @@
+
+app.post('/api/save', (req, res)=>{ 
+    // rsProductModel.save().then(() => console.log('Product Text1 Saved'));
+    // const rsProductModel = new productModel({ 
+    //     itemname: req.body.t1,
+    //     itemqty: req.body.t2,
+    //     itemrate: req.body.t3,
+    //     saleflag: req.body.t4
+    // });
+    const rsProductModel = new productModel(req.body)
+    rsProductModel.save().then(item=>{
+        console.log('Product Text1 Saved')
+    }).catch(err=>{
+        console.log('Product Error in Saved' + err)
+    })
+})
+
+app.get("/api/all", (req, res)=>{
+    productModel.find((err, result)=>{
+        if (!err){
+            res.send(result)
+        }
+        else{
+            res.send("Query Error........" + err)
+        }
+    })
+})
+
+app.get("/api/find/:id", (req, res)=>{    
+    // console.log(req.params.id)
+    productModel.findById({_id: req.params.id}, (err, result)=>{
+        if (!err){
+            res.send(result)
+        }
+        else{
+            res.send("Query Error........" + err)
+        }
+    })
+})
+
+app.put("/api/update/:id", async(req, res)=>{    
+    await productModel.findByIdAndUpdate({
+        _id: req.params.id        
+    }, req.body, {}).then((data)=>{
+        res.send(data)
+    }).catch((error)=>{
+        res.send("Error Udpate API" + error)
+    })
+})
+
+app.delete("/api/delete/:id", async(req, res)=>{    
+    await productModel.findByIdAndDelete({
+        _id: req.params.id        
+    }).then((data)=>{
+        res.send("Product Deleted....")
+    }).catch((error)=>{
+        res.send("Error Delete API" + error)
+    })
+})
